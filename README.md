@@ -78,11 +78,13 @@ To push a video (mkv) from computer through MoSeq:
 5. (Inside container) List the MKV's to confirm they are there
 - ls -1 /proj/*.mkv
 6. (Inside container) Extract an MKV
-- mkdir -p /proj/proc && \
-- moseq2-extract extract /proj/MKVFILENAME.mkv --output-dir /proj/proc --camera-type azure --fps 15
+- mkdir -p /proj/proc_1 && moseq2-extract extract /proj/TestMouseD2_20s.mkv --output-dir /proj/proc_1 --camera-type azure --fps 15
 7. (Inside container) See what extraction produced ~ expect names like results_00.h5, results_00.mp4, results_00.yaml, plus tiffs
-- ls -la /proj/proc
+- ls -la /proj/proc_1
 8. (Back in Windows PowerShell) Copy the preview MP4 back to Windows ~ give it a new name
 - docker cp intelligent_hoover:/proj/proc/results_00.mp4 "C:\Users\Plotkin Lab\Desktop\Test Videos\NEWFILENAME.mp4"
 9. (Inside container) Fit the MoSeq model on extraction
 - moseq2-model model /proj/proc --output-dir /proj/model
+
+If you have an issue with model
+* docker run --rm -it --volume "C:\Users\Plotkin Lab\Desktop\Test Videos:/proj" dattalab/moseq2:v1.3.1 bash
