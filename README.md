@@ -64,4 +64,25 @@ To check if a path/file exists:
 - Paste the following, and replace PATH with your file path: Test-Path "C:\Users\Plotkin Lab\Desktop\PATH"
 
 To record a video with k4arecorder.exe:
-- .\k4arecorder.exe -d NFOV_UNBINNED -c OFF --imu OFF -r 15 -l 10 test.mkv (Once you are cd'd into the folder where the recorder lives)
+- .\k4arecorder.exe -d NFOV_UNBINNED -c OFF --imu OFF -r 15 -l 10 MKVFILENAME.mkv (Once you are cd'd into the folder where the recorder lives) (Your mkv file will live wherever the k4arecorder.exe lives when acquired)
+
+To push a video (mkv) from computer through MoSeq:
+1. List running containters so you can confirm the name being used (e.g. "intelligent_hoover")
+- docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Names}}"
+2. Open a shell inside the container (e.g. "intelligent_hoover")
+- docker exec -it intelligent_hoover
+3. Create a working folder
+- mkdir -p /proj
+4. (PowerShell in NEW window) Copy your MKV's into the container
+- docker cp "C:\Users\Plotkin Lab\Desktop\Test Videos\." intelligent_hoover:/proj/
+5. (Inside container) List the MKV's to confirm they are there
+- ls -1 /proj/*.mkv
+6. (Inside container) Extract an MKV
+- mkdir -p /proj/proc && \
+- moseq2-extract extract /proj/MKVFILENAME.mkv --output-dir /proj/proc --camera-type azure --fps 15
+7. (Inside container) See what extraction produced ~ expect names like results_00.h5, results_00.mp4, results_00.yaml, plus tiffs
+- ls -la /proj/proc
+8. (Back in Windows PowerShell) Copy the preview MP4 back to Windows ~ give it a new name
+- docker cp intelligent_hoover:/proj/proc/results_00.mp4 "C:\Users\Plotkin Lab\Desktop\Test Videos\NEWFILENAME.mp4"
+9. (Inside container) Fit the MoSeq model on extraction
+- moseq2-model model /proj/proc --output-dir /proj/model
