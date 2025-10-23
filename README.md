@@ -64,7 +64,7 @@ To check if a path/file exists:
 - Paste the following, and replace PATH with your file path: Test-Path "C:\Users\Plotkin Lab\Desktop\PATH"
 
 To record a video with k4arecorder.exe:
-- .\k4arecorder.exe -d NFOV_UNBINNED -c OFF --imu OFF -r 15 -l 10 MKVFILENAME.mkv (Once you are cd'd into the folder where the recorder lives) (Your mkv file will live wherever the k4arecorder.exe lives when acquired)
+- .\k4arecorder.exe -d NFOV_UNBINNED -c OFF --imu OFF -r 15 -l 300 MKVFILENAME.mkv (Once you are cd'd into the folder where the recorder lives) (Your mkv file will live wherever the k4arecorder.exe lives when acquired)
 
 To push a video (mkv) from computer through MoSeq:
 1. List running containters so you can confirm the name being used (e.g. "intelligent_hoover")
