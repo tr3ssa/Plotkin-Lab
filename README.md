@@ -14,12 +14,14 @@ Open field: White open field (avoid shiny/reflective surface and regulate lighti
 
 #### Outstanding Tasks
 - Find optimal distance from ground for depth camera
-- Find optimal camera settings (zoom, FOV, etc.) to acquire good single-mouse depth videos
+- Find optimal camera settings (zoom, FOV, etc.) to acquire good depth videos
 
 # Folders/Files
 MoSeq Info - There should be a folder to hold all of the important MoSeq information
 - Contains project files in a subfolder titled moseq_out, where outputs from the MoSeq program will be collected
 - A moseq_start.bat should exist that will start MoSeq when double-clicked (shortcut on desktop should exist!)
+
+NOTE: I have not used the MoSeq shortcut yet; only commands in the PowerShell to pull the image(s). It may be useful later when optimized.
 
 OrbbecWrapper - A folder that acts as a home for the tools that we run day-to-day so that paths in scrupts never change; important for acquisition and camera functioning
 - K4AWrapper subfolder containing K4A wrapper, which is a compatibility layer bundled with our OrbbecSDK that makes our camera behave like an Azure Kinect (K4A) device that works with software tools. It contains utilities like k4arecorder.exe so that we have the ability to record depth-only videos in Windows without having to install the Azure Kinect SDK (and k4aviewer.exe to view). Most of the important K4A information is in the bin folder.
@@ -64,9 +66,18 @@ To check if a path/file exists:
 - Paste the following, and replace PATH with your file path: Test-Path "C:\Users\Plotkin Lab\Desktop\PATH"
 
 To record a video with k4arecorder.exe:
-- .\k4arecorder.exe -d NFOV_UNBINNED -c OFF --imu OFF -r 15 -l 300 MKVFILENAME.mkv (Once you are cd'd into the folder where the recorder lives) (Your mkv file will live wherever the k4arecorder.exe lives when acquired)
+- .\k4arecorder.exe -d NFOV_UNBINNED -c OFF --imu OFF -r 15 -l 300 MKVFILENAME.mkv (Once you are cd'd into the folder where the recorder lives) (Your mkv file will live wherever the k4arecorder.exe lives when acquired) (change "300" to whatever length in SECONDS you want your recording to be)
 
 To push a video (mkv) from computer through MoSeq:
+1. Run the image through Docker
+- docker run --rm -it --name moseq2 -v "C:\Users\Plotkin Lab\Desktop\Test Videos:/data" dattalab/moseq2:v1.3.1 bash
+- docker exec -it moseq2 bash
+- ls -1 /data/*.mkv
+- mkdir -p /data/proc_1
+- ls -al /data | grep proc_1
+- moseq2-extract extract "/data/<PUT-YOUR-FILENAME-HERE>.mkv" --output-dir /data/proc_1 --camera-type azure
+
+Old Instructions (Could be useful for alternative routes)
 1. List running containters so you can confirm the name being used (e.g. "intelligent_hoover")
 - docker ps --format "table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Names}}"
 2. Open a shell inside the container (e.g. "intelligent_hoover")
